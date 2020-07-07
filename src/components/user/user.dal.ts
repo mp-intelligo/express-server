@@ -1,49 +1,61 @@
 import { db } from "../../db/database";
-import { InsertUserResult, DbUser } from "./User";
+import { InsertUserResult, DBUser } from "./user.types";
 
 const TABLE_NAME = 'user';
 
 export const UserDAL = {
-    
+
     insertUser: ({
         username,
         passwordHash,
         email
     }) => new Promise<InsertUserResult>((resolve, reject) => {
 
-        const query =
-            `INSERT into ${TABLE_NAME} (username, email, password) VALUES ('${username}', '${email}', '${passwordHash}')`;
+        const stmt = db.prepare(
+            `INSERT into ${TABLE_NAME} (username, email, password) VALUES (?, ?, ?)`
+        );
 
-        db.run(query, function (error) {
-            if (error) {
-                if (error.message.includes('SQLITE_CONSTRAINT: UNIQUE constraint failed: user.email')) {
-                    resolve({
-                        success: false,
-                        msg: 'Your authentication information is incorrect. Please try again.'
-                    });
+        stmt.run(
+            [
+                username,
+                email,
+                passwordHash
+            ],
+            function (error) {
+                if (error) {
+                    if (error.message.includes('SQLITE_CONSTRAINT: UNIQUE constraint failed: user.email')) {
+                        resolve({
+                            success: false,
+                            msg: 'Your authentication information is incorrect. Please try again.'
+                        });
+                    }
+
+                    return reject(error);
                 }
 
-                return reject(error);
-            }
-
-            const id = this.lastID;
-            resolve({
-                success: true,
-                id
+                const id = this.lastID;
+                resolve({
+                    success: true,
+                    id
+                });
             });
-        });
     }),
 
-    getUser: (username: string) => new Promise<DbUser>((resolve, reject) => {
-        const query = 
-            `SELECT * FROM ${TABLE_NAME} WHERE username = '${username}'`;
+    getUser: (username: string) => new Promise<DBUser>((resolve, reject) => {
+        const stmt = db.prepare(
+            `SELECT * FROM ${TABLE_NAME} WHERE username = ?`
+        );
 
-        db.get(query, (error, user) => {
-            if (error) {
-                return reject(error);
-            }
+        stmt.get(
+            [
+                username
+            ],
+            (error, user) => {
+                if (error) {
+                    return reject(error);
+                }
 
-            resolve(user);
-        });
+                resolve(user);
+            });
     })
 };

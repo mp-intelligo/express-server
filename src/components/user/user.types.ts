@@ -1,10 +1,10 @@
-export type User = {
+export type ViewUser = {
     id: number,
     username: string,
     email: string
 };
 
-export interface DbUser extends User {
+export interface DBUser extends ViewUser {
     password: string
 };
 

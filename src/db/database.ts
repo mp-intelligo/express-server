@@ -4,7 +4,11 @@ const sqlite3 = verbose();
 
 const DBSOURCE = "./src/db/db.sqlite";
 
-const db = new sqlite3.Database(DBSOURCE, (err) => {
+/* 
+TODO: Move prepare and run logic over here
+*/
+
+export const db = new sqlite3.Database(DBSOURCE, (err) => {
   if (err) {
     throw err;
   } else {
@@ -12,15 +16,10 @@ const db = new sqlite3.Database(DBSOURCE, (err) => {
   }
 });
 
-const closeDb = () => db.close(error => {
+export const closeDb = () => db.close(error => {
   if (error) {
     console.error(error);
   } else {
     console.log('Closed DB connection');
   }
 });
-
-export {
-  db,
-  closeDb
-};

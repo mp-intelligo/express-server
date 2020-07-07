@@ -1,11 +1,10 @@
 import * as bcryptjs from 'bcryptjs';
 import * as jwt from 'jsonwebtoken';
-import * as expressJwt from 'express-jwt';
-import { User } from './User';
+import { ViewUser } from '../user/user.types';
 import * as appConfig from '../../utils/config';
 
 
-export const UserService = {
+export const AuthenticationService = {
 
     hashPassword: async (password: string) => {
         const salt = await bcryptjs.genSalt();
@@ -18,7 +17,7 @@ export const UserService = {
         return isMatched;
     },
 
-    createToken: (user: User) => new Promise<string>((resolve, reject) => {
+    createToken: (user: ViewUser) => new Promise<string>((resolve, reject) => {
         jwt.sign(
             user,
             appConfig.SECRET,
@@ -36,26 +35,19 @@ export const UserService = {
         );
     }),
 
-    validateToken: expressJwt({
-        secret: appConfig.SECRET,
-        algorithms: ['HS256'],
-    })
-        .unless({
-            path: [
-                '/api/auth/signin',
-                '/api/auth/signup'
-            ]
-        }),
+    parseAuthHeader: (authHeader: string = 'Bearer '): Promise<ViewUser> =>
+        new Promise((resolve, reject) => {
+            const token = authHeader.split(' ')[1];
+            jwt.verify(
+                token,
+                appConfig.SECRET,
+                (error, user: ViewUser) => {
+                    if (error) {
+                        return reject(error);
+                    }
 
-    unauthorizedErrorHandler: (err, req, res, next) => {
-        if (err instanceof expressJwt.UnauthorizedError) {
-            return res.json({
-                success: false,
-                msg: '401 Unauthorized'
-            });
-        }
-
-        next();
-    }
+                    resolve(user);
+                });
+        })
 
 };

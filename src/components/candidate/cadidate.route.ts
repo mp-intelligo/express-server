@@ -12,6 +12,7 @@ CandidateRouter.get('/', async (req, res, next) => {
             success: true,
             candidates
         });
+        
     } catch (error) {
         next(error);
     }

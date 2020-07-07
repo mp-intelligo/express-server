@@ -1,12 +1,13 @@
-import { UserService } from "./user.service";
-import { UserDAL } from "./user.dal";
+import { AuthenticationService } from "./authentication.service";
+import { UserDAL } from "../user/user.dal";
+import { ViewUser } from "../user/user.types";
 
 
-export const UserController = {
+export const AuthenticationController = {
 
     signup: async ({ username, email, password }) => {
 
-        const passwordHash = await UserService.hashPassword(password);
+        const passwordHash = await AuthenticationService.hashPassword(password);
         
         const { success, id, msg } = await UserDAL.insertUser({ username, passwordHash, email });
 
@@ -17,7 +18,7 @@ export const UserController = {
             };
         }
 
-        const token = await UserService.createToken({ id, username, email });
+        const token = await AuthenticationService.createToken({ id, username, email });
 
         return {
             success: true,
@@ -31,7 +32,7 @@ export const UserController = {
         let isMatch = false;
 
         if (user) {
-            isMatch = await UserService.checkPassword(password, user.password);
+            isMatch = await AuthenticationService.checkPassword(password, user.password);
         }
 
         if (!isMatch) {
@@ -41,7 +42,8 @@ export const UserController = {
             };
         }
 
-        const token = await UserService.createToken(user);
+        const { id, email }: ViewUser = user;
+        const token = await AuthenticationService.createToken({ id, username, email});
 
         return {
             success: true,
