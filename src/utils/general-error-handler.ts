@@ -1,5 +1,6 @@
-import { ErrorRequestHandler, Request, Response, NextFunction } from "express";
-const errorHandler: ErrorRequestHandler = (
+import { ErrorRequestHandler, Request, Response, NextFunction } from 'express';
+
+export const generalErrorHandler: ErrorRequestHandler = (
     error: any,
     req: Request,
     res: Response,
@@ -12,5 +13,3 @@ const errorHandler: ErrorRequestHandler = (
         msg: 'Internal server error'
     });
 };
-
-export { errorHandler };

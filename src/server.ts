@@ -1,7 +1,6 @@
 import * as express from 'express';
 import * as cors from 'cors';
-import { json } from 'body-parser';
-import { errorHandler } from './utils/error-handler';
+import { generalErrorHandler } from './utils/general-error-handler';
 import { onShutdown } from './utils/shutdown.util';
 import * as appConfig from './utils/config';
 import { CandidateRouter } from './components/candidate/cadidate.route';
@@ -17,11 +16,11 @@ express()
         origin: appConfig.ORIGIN,
         methods: ['POST', 'GET', 'OPTIONS']
     }))
-    .use(json({ limit: '1mb' }))
+    .use(express.json())
     .use(AuthenticationMiddleware.envalidateUser)
     .use('/api/candidates', CandidateRouter)
     .use('/api/auth', AuthenticationRouter)
-    .use(errorHandler)
+    .use(generalErrorHandler)
     .listen(PORT, () => {
         console.log(`Server is running on port ${PORT}.`);
     });

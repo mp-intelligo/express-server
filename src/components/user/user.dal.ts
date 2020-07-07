@@ -3,6 +3,33 @@ import { InsertUserResult, DBUser } from "./user.types";
 
 const TABLE_NAME = 'user';
 
+const createInsertCallback = (resolve, reject) => function (error: Error) {
+    if (error) {
+        if (error.message.includes('UNIQUE constraint failed: user.email')) {
+            resolve({
+                success: false,
+                msg: 'Email already exists'
+            });
+        }
+
+        if (error.message.includes('UNIQUE constraint failed: user.username')) {
+            resolve({
+                success: false,
+                msg: 'Username already exists'
+            });
+        }
+
+        return reject(error);
+    }
+
+    const id = this.lastID;
+    resolve({
+        success: true,
+        id
+    });
+};
+
+
 export const UserDAL = {
 
     insertUser: ({
@@ -21,24 +48,8 @@ export const UserDAL = {
                 email,
                 passwordHash
             ],
-            function (error) {
-                if (error) {
-                    if (error.message.includes('SQLITE_CONSTRAINT: UNIQUE constraint failed: user.email')) {
-                        resolve({
-                            success: false,
-                            msg: 'Your authentication information is incorrect. Please try again.'
-                        });
-                    }
-
-                    return reject(error);
-                }
-
-                const id = this.lastID;
-                resolve({
-                    success: true,
-                    id
-                });
-            });
+            createInsertCallback(resolve, reject)
+        );
     }),
 
     getUser: (username: string) => new Promise<DBUser>((resolve, reject) => {
