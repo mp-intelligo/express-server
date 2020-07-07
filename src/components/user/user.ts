@@ -4,6 +4,10 @@ export type User = {
     email: string
 };
 
+export interface DbUser extends User {
+    password: string
+};
+
 export interface InsertUserResult {
     success: boolean,
     msg?: string,

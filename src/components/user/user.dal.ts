@@ -1,5 +1,5 @@
 import { db } from "../../db/database";
-import { InsertUserResult } from "./User";
+import { InsertUserResult, DbUser } from "./User";
 
 const TABLE_NAME = 'user';
 
@@ -31,6 +31,19 @@ export const UserDAL = {
                 success: true,
                 id
             });
+        });
+    }),
+
+    getUser: (username: string) => new Promise<DbUser>((resolve, reject) => {
+        const query = 
+            `SELECT * FROM ${TABLE_NAME} WHERE username = '${username}'`;
+
+        db.get(query, (error, user) => {
+            if (error) {
+                return reject(error);
+            }
+
+            resolve(user);
         });
     })
 };

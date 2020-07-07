@@ -13,11 +13,12 @@ export const UserService = {
         return passwordHash;
     },
 
-    checkPassword: async (username: string, password: string) => {
-        // const isMatched = await bcryptjs.compare(password, )
+    checkPassword: async (password: string, passwordHash: string) => {
+        const isMatched = await bcryptjs.compare(password, passwordHash);
+        return isMatched;
     },
 
-    createToken: (user: User) => new Promise((resolve, reject) => {
+    createToken: (user: User) => new Promise<string>((resolve, reject) => {
         jwt.sign(
             user,
             appConfig.SECRET,

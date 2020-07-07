@@ -13,16 +13,16 @@ UserRouter.post('/signup', async (req, res, next) => {
     }
 });
 
-// UserRouter.post('/signin', async (req, res) => {
-//     const token = await UserController.signin();
-//     res.json({
-//         success: true,
-//         token: ''
-//     });
-// });
+UserRouter.post('/signin', async (req, res, next) => {
+    const { username, password } = req.body;
 
-UserRouter.post('/signup', async (req, res) => {
-
+    try {
+        const result = await UserController.signin({ username, password });
+        res.json(result);
+    } catch (error) {
+        next(error);
+    }
 });
+
 
 export { UserRouter };
