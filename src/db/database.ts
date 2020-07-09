@@ -1,8 +1,9 @@
 import { verbose } from 'sqlite3';
+import * as path from 'path';
 
 const sqlite3 = verbose();
 
-const DBSOURCE = "./src/db/db.sqlite";
+const DBSOURCE = path.join(__dirname, 'db.sqlite');
 
 /* 
 TODO: Move prepare and run logic over here
