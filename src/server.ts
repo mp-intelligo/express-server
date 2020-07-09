@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 8080;
 express()
     .disable('x-powered-by')
     .use(express.static(path.join(__dirname, 'build')))
-    .use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
+    .use(favicon(path.join(__dirname, 'build', 'favicon.ico')))
     .use(cors({
         origin: appConfig.ORIGIN,
         methods: ['POST', 'GET', 'OPTIONS']
