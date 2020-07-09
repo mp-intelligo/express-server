@@ -7,6 +7,7 @@ import { CandidateRouter } from './components/candidate/cadidate.route';
 import { AuthenticationMiddleware } from './components/authentication/authentication.middleware';
 import { AuthenticationRouter } from './components/authentication/authentication.route';
 import * as path from 'path';
+import * as favicon from 'serve-favicon';
 
 const PORT = process.env.PORT || 8080;
 
@@ -14,6 +15,7 @@ const PORT = process.env.PORT || 8080;
 express()
     .disable('x-powered-by')
     .use(express.static(path.join(__dirname, 'build')))
+    .use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
     .use(cors({
         origin: appConfig.ORIGIN,
         methods: ['POST', 'GET', 'OPTIONS']
