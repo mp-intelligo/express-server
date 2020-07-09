@@ -11,7 +11,7 @@ export const validationsHandler = (validations: ValidationChain[]) => {
             return next();
         }
 
-        res.status(422).json({
+        res.json({
             success: false,
             msg: errors.array().map(({ param, msg}) => `${param}: ${msg}`).join('; ')
         });

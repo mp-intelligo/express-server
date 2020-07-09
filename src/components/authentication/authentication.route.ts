@@ -17,11 +17,6 @@ const signupValidations = [
 AuthenticationRouter.post('/signup', validationsHandler(signupValidations), async (req, res, next) => {
     const { username, email, password } = req.body;
 
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        errors
-    }
-
     try {
         const result = await AuthenticationController.signup({ username, email, password });
         res.json(result);

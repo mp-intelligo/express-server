@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "nodemon --inspect src/server.ts",
-    "build": "tsc"
+    "build": "npx ncc build --minify --no-cache --out bin src/server.ts "
   },
   "keywords": [],
   "author": "",
