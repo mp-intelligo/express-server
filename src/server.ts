@@ -6,12 +6,14 @@ import * as appConfig from './utils/config';
 import { CandidateRouter } from './components/candidate/cadidate.route';
 import { AuthenticationMiddleware } from './components/authentication/authentication.middleware';
 import { AuthenticationRouter } from './components/authentication/authentication.route';
+import * as path from 'path';
 
 const PORT = process.env.PORT || 8080;
 
 
 express()
     .disable('x-powered-by')
+    .use(express.static(path.join(__dirname, 'build')))
     .use(cors({
         origin: appConfig.ORIGIN,
         methods: ['POST', 'GET', 'OPTIONS']
