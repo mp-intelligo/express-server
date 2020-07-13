@@ -7,8 +7,8 @@ const AuthenticationRouter = Router();
 
 const signupValidations = [
     body('username').trim().notEmpty(),
-    body('email').isEmail().withMessage('Email is not valid'),
-    body('password')
+    body('email').trim().isEmail().withMessage('Email is not valid'),
+    body('password').trim()
         .isLength({ min: 6 }).withMessage('Password length must be at least 6 characters')
         .matches(/\d/).withMessage('Password must contain at least one number')
         .matches(/[A-z]/).withMessage('Password must contain at least one letter')
