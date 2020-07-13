@@ -6,14 +6,14 @@ const TABLE_NAME = 'user';
 const createInsertCallback = (resolve, reject) => function (error: Error) {
     if (error) {
         if (error.message.includes('UNIQUE constraint failed: user.email')) {
-            resolve({
+            return resolve({
                 success: false,
                 msg: 'Email already exists'
             });
         }
 
         if (error.message.includes('UNIQUE constraint failed: user.username')) {
-            resolve({
+            return resolve({
                 success: false,
                 msg: 'Username already exists'
             });
